@@ -1,0 +1,241 @@
+<!doctype HTML>
+<html>
+    <head>
+        <script type="text/javascript" src="js/jquery-1.4.2.js"></script>
+        <script type="text/javascript" src="js/jquery.mockjson.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+        
+
+        <style type="text/css">
+        body, html {
+            padding:0;
+            margin:0;
+            color:#333;
+            color:#000;
+            background:#EEE;
+            font-family:'Lucida Grande', Verdana, Arial, Helvetica, sans-serif;
+            font-family: Georgia, 'Hiragino Mincho Pro', serif;
+            font-size:14px;
+            line-height:1.5;
+        }
+
+        h1, h2, h3, h4, h5, p, pre {
+            margin:0;
+            padding:8px 0 0;
+            font-weight:normal;
+        }
+        
+        h1 {
+            text-align:center;
+            padding:16px;
+            margin:0 0 8px;
+            border-bottom:1px dotted #CCC;
+            font-size:40px;
+        }
+
+        h2 {
+            font-size:20px;
+        }
+
+        pre {
+            margin:8px 0;
+            padding:8px;
+            background:#EEE;
+            font-family: 'Courier New', monospace;
+            overflow:auto;
+        }
+        
+        code {
+            background:#EEE;
+            font-family: 'Courier New', monospace;
+        }
+        
+        p {
+            padding:8px 0 0;
+        }
+        
+        p#intro {
+            font-size:16px;
+        }
+        
+        p#download {
+            font-size:20px;
+            font-weight:bold;
+            text-align:center;
+        }
+        
+        #all {
+            width:944px;
+            margin:0 auto;
+            padding:8px;
+            border-right:1px dotted #CCC;
+            border-left:1px dotted #CCC;
+            background:#FFF;
+            overflow:auto;
+        }
+        
+        #template,
+        #result {
+        }
+
+        #output {
+            width:391px;
+            float:right;
+            margin:0 0 0 8px;
+            padding:0 0 0 8px;
+            border-left:1px dotted #CCC;
+        }
+        
+        #output h2 {
+            text-align:center;
+            margin:0 0 8px;
+            border-bottom:1px dotted #CCC;
+        }
+        </style>
+
+        <title>mockJSON - a jQuery plugin for mocking JSON and JSONP requests</title>
+        
+    </head>
+    <body>
+    <div id="all">
+    
+        <h1>mockJSON</h1>
+        
+        <div id="output">
+            <h2>Example</h2>
+            <h3>Template JSON</h3>
+            <pre id="template"></pre>
+            <h3>Random generated JSON</h3>
+            <p>Reload to see newly generated data</p>
+            <pre id="result"></pre>
+        </div>
+        
+        <p id="intro">MockJSON is a plugin for jQuery that can hijack 
+        JSON and JSONP requests and respond with randomly generated JSON 
+        data. Completely random JSON would be pretty useless of course, so
+        you can specify a JSON <em>template</em> for each request. On the right you 
+        see an example of such a template and some generated 
+        output.</p>
+            <p id="download"><a href="js/jquery.mockjson.js">download source</a> | <a href="tryit.html">try it</a></p>
+            <h2>Usage</h2>
+            <pre>
+// create template and regular expression for request that
+// should be mocked
+$.mockJSON(/foo\.json/, {
+    "fathers|5-10":[ ...etc... ]
+});
+
+// request JSON as usual
+$.getJSON('foo/foo.json', function(json) {
+    // this will be mocked
+});
+
+$.getJSON('foo/bar.json', function(json) {
+    // this will not be mocked
+});
+</pre>
+        <p>A template is valid JSON in itself and as such is an object with
+        labels and values. Values can be strings, numbers, booleans, arrays and other 
+        objects.</p> 
+            
+            <h2>Numbers</h2>
+            <p>Adding <code>|x-y</code> to a number's label will replace the number
+            with <code>r</code>, where <code>r</code> is a random number
+            between <code>x</code> and <code>y</code>.</p>
+            <pre>
+// Example template
+{ "age|0-99" : 0 }
+
+// Example output
+{ "age" : 42 }
+</pre>
+            
+            <h2>Boolean</h2>
+            <p>Adding <code>|x-y</code> to a boolean's label will randomly replace the boolean
+            with <code>true</code> or <code>false</code>. The values of 
+            <code>x</code> and <code>y</code> are irrelevant.</p>
+            <pre>
+// Example template
+{ "married|0-1" : true }
+
+// Example output
+{ "married" : false }
+</pre>
+            
+            <h2>Strings</h2>
+            <p>MockJSON comes with a number of keywords in the form 
+            <code>@KEY_WORD</code> that are automatically replaced with random 
+            data inside a string. These keywords can be combined with other 
+            characters in a string.</p>
+            <pre>
+// Example template
+{ "name" : "@LAST_NAME, @MALE_FIRST_NAME" }
+
+// Example output
+{ "name" : "Hall, Kevin" }
+</pre>
+            <p>You can easily add your own keywords.</p>
+            <pre>
+// Adding the @US_STATE keyword
+$.mockJSON.data.US_STATE = [
+    'Alabama', 'Alaska', ... , 'Wisconsin', 'Wyoming'
+];
+
+// Example template
+{ "state" : "@US_STATE" }
+
+// Example output
+{ "state" : "Alaska" }
+</pre>
+            <p>Adding <code>|x-y</code> to a string's label will repeat the 
+            string <code>r</code> times, where <code>r</code> is a random number
+            between <code>x</code> and <code>y</code>.</p>
+            <pre>
+// Example template
+{ "rating|1-5" : "*" }
+
+// Example output
+{ "rating" : "***" }
+
+
+// This can also be combined with keywords.
+{ "initials|1-5" : "@LETTER_UPPER." }
+
+// Example output
+{ "initials" : "V.M.J." }
+</pre>
+
+            <h2>Arrays</h2>
+            <p>Adding <code>|x-y</code> to an array's label will fill the array 
+            with <code>r</code> instances of the first element, where 
+            <code>r</code> is a random number between <code>x</code> and 
+            <code>y</code>. Each of these elements will be treated as a new
+            template.</p>
+
+            <pre>
+// Example template
+{
+    "daughters|0-3" : [
+        { "Name" : "@FEMALE_FIRST_NAME" }
+    ],
+    "sons|0-3" : ["@MALE_FIRST_NAME"]
+} 
+
+// Example output
+{
+    "daughters" : [
+        { "Name" : "Linda" },
+        { "Name" : "Barbara" }
+    ],
+    "sons" : ["William", "David", "Jeffrey"]
+} 
+</pre>
+    
+            <h2>Extra's</h2>
+            <p>Sometimes random is a bit <em>too</em> random. When you want to 
+            have predictable, reproducible JSON generated: set the
+            <code>$.mockJSON.random = <strong>false</strong>.</code>
+
+    </div>
+    </body>
+</html>

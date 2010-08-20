@@ -1,0 +1,151 @@
+<!doctype HTML>
+<html>
+    <head>
+        <script type="text/javascript" src="js/jquery-1.4.2.js"></script>
+        <script type="text/javascript" src="js/jquery.mockjson.js"></script>
+        <script type="text/javascript" src="js/tryit.js"></script>
+        
+
+        <style type="text/css">
+        body, html {
+            padding:0;
+            margin:0;
+            color:#333;
+            color:#000;
+            background:#EEE;
+            font-family:'Lucida Grande', Verdana, Arial, Helvetica, sans-serif;
+            font-family: Georgia, 'Hiragino Mincho Pro', serif;
+            font-size:14px;
+            line-height:1.5;
+            overflow:hidden;
+        }
+        
+        h1, h2, h3, h4, h5, p, pre {
+            margin:0;
+            padding:8px 0 0;
+            font-weight:normal;
+        }
+        
+        h1 {
+            font-size:30px;
+            line-height:60px;
+            padding:0 8px;
+            text-shadow:1px 1px #FFF;
+        }
+        
+        textarea {
+            font-size:14px;
+            font-family: 'Courier New', monospace;
+            -moz-border-radius:4px;
+        }
+
+        #keywords,
+        #template,
+        #result,
+        .inner {
+            position:absolute;
+            left:0;
+            top:0;
+            bottom:0;
+            right:0;
+        }
+        
+        .inner {
+            top:60px;
+            right:8px;
+            bottom:8px;
+        }
+        
+        #template textarea,
+        #result textarea {
+            -moz-box-sizing:border-box;
+            -webkit-box-sizing:border-box;
+            box-sizing:border-box;
+            background:#FFF;
+            border:1px solid #CCC;
+            border-right-color:#EEE;
+            border-bottom-color:#EEE;
+            width:100%;
+            height:100%;
+            padding:8px;
+        }
+        
+        #keywords {
+            right:80%;
+        }
+        
+        #template {
+            left:20%;
+            right:40%;
+        }
+        
+        #result {
+            left:60%;
+        }
+        
+        .buttons {
+            position:absolute;
+            top:8px;
+            right:8px;
+        }
+        
+        #keywords .inner {
+            padding:8px;
+        }
+        #keywords ul {
+            list-style:none;
+            margin:0;
+            padding:0;
+        }
+        
+        #keywords ul li {
+            padding:0 0 0;
+        }
+        
+        #keywords p {
+            margin:0;
+            padding:8px 0 0;
+        }
+        
+        </style>
+
+        <title>mockJSON - a jQuery plugin for mocking JSON and JSONP requests</title>
+    </head>
+    <body>
+    
+    <div id="keywords">
+        <h1>mockJSON</h1>
+        <div class="inner">
+            <p class="intro">MockJSON is a plugin for jQuery that can hijack 
+            JSON and JSONP requests and respond with randomly generated JSON 
+            data. More info <a href="index.html">can be found here</a>.</p>
+            <p>Enter your JSON template in the area on the left and click <em>generate</em>
+            to see mockJSON in action.</p>
+            <h2>Keywords</h2>
+            <ul>
+            </ul>
+        </div>
+    </div>
+    
+    <div id="template">
+        <h1>Template</h1>
+        <div class="inner">
+            <textarea></textarea>
+        </div>
+        <div class="buttons">
+            <button id="button-template1">template 1</button>
+            <button id="button-template2">template 2</button>
+            <button id="button-generate">generate!</button>
+        </div>
+    </div>
+    
+    <div id="result">
+        <h1>Result</h1>
+        <div class="inner">
+            <textarea></textarea>
+        </div>
+    </div>
+    
+
+    </body>
+</html>
