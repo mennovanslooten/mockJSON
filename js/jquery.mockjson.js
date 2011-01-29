@@ -37,7 +37,7 @@ $.ajax = function(options) {
 }
 
 
-function generateFromTemplate(template, name) {
+$.mockJSON.generateFromTemplate = function(template, name) {
     var length = 0;
     var matches = (name || '').match(/\w+\|(\d+)-(\d+)/);
     if (matches) {
@@ -51,14 +51,14 @@ function generateFromTemplate(template, name) {
         case 'array':
             generated = [];
             for (var i = 0; i < length; i++) {
-                generated[i] = generateFromTemplate(template[0]);
+                generated[i] = $.mockJSON.generateFromTemplate(template[0]);
             }
             break;
 
         case 'object':
             generated = {};
             for (var p in template) {
-                generated[p.replace(/\|\d+-\d+/, '')] = generateFromTemplate(template[p], p);
+                generated[p.replace(/\|\d+-\d+/, '')] = $.mockJSON.generateFromTemplate(template[p], p);
             }
             break;
 
