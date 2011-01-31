@@ -27,7 +27,7 @@ $.ajax = function(options) {
         for (var i = 0; i < _mocked.length; i++) {
             var mock = _mocked[i];
             if (mock.request.test(options.url)) {
-                options.success(generateFromTemplate(mock.template));
+                options.success($.mockJSON.generateFromTemplate(mock.template));
                 return $;
             }
         }
