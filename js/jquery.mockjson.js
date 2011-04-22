@@ -58,7 +58,12 @@ $.mockJSON.generateFromTemplate = function(template, name) {
         case 'object':
             generated = {};
             for (var p in template) {
-                generated[p.replace(/\|\d+-\d+/, '')] = $.mockJSON.generateFromTemplate(template[p], p);
+                generated[p.replace(/\|(\d+-\d+|\+\d+)/, '')] = $.mockJSON.generateFromTemplate(template[p], p);
+                var inc_matches = p.match(/\w+\|\+(\d+)/);
+                if (inc_matches && type(template[p]) == 'number') {
+                    var increment = parseInt(inc_matches[1], 10);
+                    template[p] += increment;
+                }
             }
             break;
 
@@ -70,7 +75,7 @@ $.mockJSON.generateFromTemplate = function(template, name) {
 
         case 'boolean':
             generated = (matches)
-                ? rand() >= .5
+                ? rand() >= 0.5
                 : template;
             break;
 

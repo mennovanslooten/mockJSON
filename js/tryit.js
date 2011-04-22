@@ -5,6 +5,7 @@ $(document).ready(function() {
     var template1 = {
         "fathers|5-10":[
             {
+                "id|+1":0,
                 "married|0-1":true,
                 "name":"@MALE_FIRST_NAME @LAST_NAME",
                 "sons":null,
