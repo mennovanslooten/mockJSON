@@ -19,7 +19,7 @@ $.mockJSON = function(request, template) {
 };
 
 $.mockJSON.random = true;
-
+$.mockJSON.log = true;
 
 var _original_ajax = $.ajax;
 $.ajax = function(options) {
@@ -115,8 +115,10 @@ function getRandomData(key) {
     var params = key.match(/\(([^\)]+)\)/g) || [];
     
     if (!(key in $.mockJSON.data)) {
-        console.log(key);
-        console.log(params);
+        if ($.mockJSON.log) {
+            console.log(key);
+            console.log(params);
+        }
         return key;
     }
     
