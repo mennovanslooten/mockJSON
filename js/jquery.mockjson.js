@@ -36,7 +36,7 @@ $.ajax = function(options) {
     return _original_ajax.apply(this, arguments);
 }
 
-
+$.mockJSON.cache = {};
 $.mockJSON.generateFromTemplate = function(template, name) {
     var length = 0;
     var matches = (name || '').match(/\w+\|(\d+)-(\d+)/);
@@ -47,6 +47,7 @@ $.mockJSON.generateFromTemplate = function(template, name) {
     }
         
     var generated = null;
+    var key = null;
     switch (type(template)) {
         case 'array':
             generated = [];
@@ -58,7 +59,22 @@ $.mockJSON.generateFromTemplate = function(template, name) {
         case 'object':
             generated = {};
             for (var p in template) {
-                generated[p.replace(/\|\d+-\d+/, '')] = $.mockJSON.generateFromTemplate(template[p], p);
+                key = p.replace(/\|(\d+-\d+|\+\d+|\$\w+)/, '');
+                generated[key] = $.mockJSON.generateFromTemplate(template[p], p);
+                var matches = p.match(/\w+\|(\+\d+|\$\w+)/), match;
+                if (matches) {
+                    match = matches[1];
+                    if (type(template[p]) == 'number') {
+                        var increment = parseInt(match, 10);
+                        template[p] += increment;
+                    } else {
+                        if ($.mockJSON.cache[match]) {
+                            generated[key] = $.mockJSON.cache[match];
+                        } else {
+                            $.mockJSON.cache[match] = generated[key];
+                        }
+                    }
+                }
             }
             break;
 
@@ -85,6 +101,12 @@ $.mockJSON.generateFromTemplate = function(template, name) {
                 for (var i = 0; i < keys.length; i++) {
                     var key = keys[i];
                     generated = generated.replace(key, getRandomData(key));
+                }
+                keys = generated.match(/\$\w+/g) || [];
+                for (var i = 0; i < keys.length; i++) {
+                    var key = keys[i],
+                        replacement = $.mockJSON.cache[key] ? $.mockJSON.cache[key] : key;
+                    generated = generated.replace(key, replacement);
                 }
             } else {
                 generated = ""
