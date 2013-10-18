@@ -145,6 +145,7 @@
 
     $.mockJSON.generateFromTemplate = function (template, name) {
         var i,
+            j,
             p,
             key,
             keys,
@@ -166,8 +167,13 @@
         switch (type(template)) {
         case 'array':
             generated = [];
-            for (i = 0; i < length; i += 1) {
-                generated[i] = $.mockJSON.generateFromTemplate(template[0]);
+            for (i = 0; i < (length || template.length); i += 1) {
+                if (!length) {
+                    j = i;
+                } else {
+                    j = 0;
+                }
+                generated[i] = $.mockJSON.generateFromTemplate(template[j]);
             }
             break;
 
