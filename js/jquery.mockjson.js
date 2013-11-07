@@ -89,7 +89,10 @@ $.mockJSON.generateFromTemplate = function(template, name) {
                 var keys = generated.match(/@([A-Z_0-9\(\),]+)/g) || [];
                 for (var i = 0; i < keys.length; i++) {
                     var key = keys[i];
-                    generated = generated.replace(key, getRandomData(key));
+                    var randomData = getRandomData(key);
+                    generated = generated.replace(key, randomData);
+                    if (type(randomData) == 'number')
+                        generated = Number(generated);
                 }
             } else {
                 generated = ""
