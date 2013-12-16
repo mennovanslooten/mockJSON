@@ -27,7 +27,9 @@ $.ajax = function(options) {
         for (var i = 0; i < _mocked.length; i++) {
             var mock = _mocked[i];
             if (mock.request.test(options.url)) {
-                options.success($.mockJSON.generateFromTemplate(mock.template));
+                setTimeout(function() {  // caller may rely on an async callback
+                    options.success($.mockJSON.generateFromTemplate(mock.template));
+                }, 0);
                 return $;
             }
         }
@@ -38,7 +40,7 @@ $.ajax = function(options) {
 
 
 $.mockJSON.generateFromTemplate = function(template, name) {
-    var length = 0;
+    var length = 1; // default to 1 - allow mock data to be a copy of real data
     var matches = (name || '').match(/\w+\|(\d+)-(\d+)/);
     if (matches) {
         var length_min = parseInt(matches[1], 10);
