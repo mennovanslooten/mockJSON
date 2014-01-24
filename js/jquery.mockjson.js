@@ -22,14 +22,25 @@ $.mockJSON.random = true;
 
 
 var _original_ajax = $.ajax;
-$.ajax = function(options) {
+$.ajax = function(url, options) {
+	// If url is an object, simulate pre-1.5 signature
+	if ( "object" === typeof url ) {
+		options = url;
+		url = undefined;
+	}
+
+	// Force options to be an object
+	options = options || {};
+	options = jQuery.ajaxSetup( {}, options ); // in case the default type of the project is 'json'
+	url = url || options.url;
     if (options.dataType === 'json') {
         for (var i = 0; i < _mocked.length; i++) {
             var mock = _mocked[i];
-            if (mock.request.test(options.url)) {
-                setTimeout(function() {  // caller may rely on an async callback
-                    options.success($.mockJSON.generateFromTemplate(mock.template));
-                }, 0);
+            if (mock.request.test(url)) {
+			// call success in a timeout because the normal flow is an async call
+            	setTimeout(function() {
+            		options.success && options.success($.mockJSON.generateFromTemplate(mock.template));
+            	}, 0);
                 return $;
             }
         }
@@ -40,7 +51,7 @@ $.ajax = function(options) {
 
 
 $.mockJSON.generateFromTemplate = function(template, name) {
-    var length = 1; // default to 1 - allow mock data to be a copy of real data
+    var length = -1;
     var matches = (name || '').match(/\w+\|(\d+)-(\d+)/);
     if (matches) {
         var length_min = parseInt(matches[1], 10);
@@ -51,9 +62,13 @@ $.mockJSON.generateFromTemplate = function(template, name) {
     var generated = null;
     switch (type(template)) {
         case 'array':
+        	var useOriginal = -1 == length; // in case no length was specified in the mock data, use it verbatim
             generated = [];
+            if (useOriginal) {
+            	length = template.length;
+            }
             for (var i = 0; i < length; i++) {
-                generated[i] = $.mockJSON.generateFromTemplate(template[0]);
+                generated[i] = $.mockJSON.generateFromTemplate(template[useOriginal ? i : 0]);
             }
             break;
 
@@ -84,7 +99,7 @@ $.mockJSON.generateFromTemplate = function(template, name) {
         case 'string':
             if (template.length) {
                 generated = '';
-                length = length || 1;
+                length = Math.max(length, 1);
                 for (var i = 0; i < length; i++) {
                     generated += template;
                 }
