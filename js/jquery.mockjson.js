@@ -23,30 +23,30 @@ $.mockJSON.random = true;
 
 var _original_ajax = $.ajax;
 $.ajax = function(url, options) {
+	var testOptions = $.extend({}, options || {}),
+		testUrl = url;
 	// If url is an object, simulate pre-1.5 signature
-	if ( "object" === typeof url ) {
-		options = url;
-		url = undefined;
+	if ( typeof testUrl === "object" ) {
+		testOptions = $.extend({}, url);
+		testUrl = undefined;
 	}
 
 	// Force options to be an object
-	options = options || {};
-	options = jQuery.ajaxSetup( {}, options ); // in case the default type of the project is 'json'
-	url = url || options.url;
-    if (options.dataType === 'json') {
+	testOptions = jQuery.ajaxSetup( {}, testOptions );
+    if (testOptions.dataType === 'json') {
+    	testUrl = testUrl || testOptions.url;
         for (var i = 0; i < _mocked.length; i++) {
             var mock = _mocked[i];
             if (mock.request.test(url)) {
-			// call success in a timeout because the normal flow is an async call
             	setTimeout(function() {
-            		options.success && options.success($.mockJSON.generateFromTemplate(mock.template));
+            		testOptions.success && testOptions.success($.mockJSON.generateFromTemplate(mock.template));
             	}, 0);
                 return $;
             }
         }
     }
     
-    return _original_ajax.apply(this, arguments);
+    return _original_ajax.apply(this, [url, options]);
 }
 
 
@@ -62,7 +62,7 @@ $.mockJSON.generateFromTemplate = function(template, name) {
     var generated = null;
     switch (type(template)) {
         case 'array':
-        	var useOriginal = -1 == length; // in case no length was specified in the mock data, use it verbatim
+        	var useOriginal = -1 == length;
             generated = [];
             if (useOriginal) {
             	length = template.length;
