@@ -22,23 +22,36 @@ $.mockJSON.random = true;
 
 
 var _original_ajax = $.ajax;
-$.ajax = function(options) {
-    if (options.dataType === 'json') {
+$.ajax = function(url, options) {
+	var testOptions = $.extend({}, options || {}),
+		testUrl = url;
+	// If url is an object, simulate pre-1.5 signature
+	if ( typeof testUrl === "object" ) {
+		testOptions = $.extend({}, url);
+		testUrl = undefined;
+	}
+
+	// Force options to be an object
+	testOptions = jQuery.ajaxSetup( {}, testOptions );
+    if (testOptions.dataType === 'json') {
+    	testUrl = testUrl || testOptions.url;
         for (var i = 0; i < _mocked.length; i++) {
             var mock = _mocked[i];
-            if (mock.request.test(options.url)) {
-                options.success($.mockJSON.generateFromTemplate(mock.template));
+            if (mock.request.test(testUrl)) {
+            	setTimeout(function() {
+            		testOptions.success && testOptions.success($.mockJSON.generateFromTemplate(mock.template));
+            	}, 0);
                 return $;
             }
         }
     }
     
-    return _original_ajax.apply(this, arguments);
+    return _original_ajax.apply(this, [url, options]);
 }
 
 
 $.mockJSON.generateFromTemplate = function(template, name) {
-    var length = 0;
+    var length = -1;
     var matches = (name || '').match(/\w+\|(\d+)-(\d+)/);
     if (matches) {
         var length_min = parseInt(matches[1], 10);
@@ -49,9 +62,13 @@ $.mockJSON.generateFromTemplate = function(template, name) {
     var generated = null;
     switch (type(template)) {
         case 'array':
+        	var useOriginal = -1 == length;
             generated = [];
+            if (useOriginal) {
+            	length = template.length;
+            }
             for (var i = 0; i < length; i++) {
-                generated[i] = $.mockJSON.generateFromTemplate(template[0]);
+                generated[i] = $.mockJSON.generateFromTemplate(template[useOriginal ? i : 0]);
             }
             break;
 
@@ -82,7 +99,7 @@ $.mockJSON.generateFromTemplate = function(template, name) {
         case 'string':
             if (template.length) {
                 generated = '';
-                length = length || 1;
+                length = Math.max(length, 1);
                 for (var i = 0; i < length; i++) {
                     generated += template;
                 }
