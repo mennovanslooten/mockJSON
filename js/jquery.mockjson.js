@@ -37,7 +37,7 @@ $.ajax = function(url, options) {
     	testUrl = testUrl || testOptions.url;
         for (var i = 0; i < _mocked.length; i++) {
             var mock = _mocked[i];
-            if (mock.request.test(url)) {
+            if (mock.request.test(testUrl)) {
             	setTimeout(function() {
             		testOptions.success && testOptions.success($.mockJSON.generateFromTemplate(mock.template));
             	}, 0);
