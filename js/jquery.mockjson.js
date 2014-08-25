@@ -211,9 +211,12 @@
                     generated += template;
                 }
                 keys = generated.match(/@([A-Z_0-9\(\),]+)/g) || [];
-                for (i = 0; i < keys.length; i += 1) {
+                for (i = 0; i < keys.length; i++) {
                     key = keys[i];
-                    generated = generated.replace(key, getRandomData(key));
+                    var randomData = getRandomData(key);
+                    generated = generated.replace(key, randomData);
+                    if (type(randomData) == 'number')
+                        generated = Number(generated);
                 }
             } else {
                 generated = "";
