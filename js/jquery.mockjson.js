@@ -93,6 +93,8 @@ $.mockJSON.generateFromTemplate = function(template, name) {
                     generated = generated.replace(key, randomData);
                     if (type(randomData) == 'number')
                         generated = Number(generated);
+                    if(type(randomData)!= 'string')
+                        generated = randomData;
                 }
             } else {
                 generated = ""
@@ -111,7 +113,8 @@ $.mockJSON.generateFromTemplate = function(template, name) {
 }
 
 
-function getRandomData(key) {
+
+var getRandomData = $.mockJSON.getRandomData=function(key) {
     key = key.substr(1); // remove "@"
     
     //var params = key.match(/\(((\d+),?)+\)/g) || [];
