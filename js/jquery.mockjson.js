@@ -195,6 +195,14 @@ $.mockJSON.data = {
             + getRandomData('@LAST_NAME').toLowerCase()
             + '.com';
     },
+    URL: function() {
+        var protocol = ['http://', 'https://'][Math.floor(2 * rand())];
+        var subdomain = ['www.', '', getRandomData('@MALE_FIRST_NAME').toLowerCase() + '.'][Math.floor(3 * rand())];
+        var domain = getRandomData('@LAST_NAME').toLowerCase();
+        var tld = ['.com', '.net', '.org', '.co.uk', '.guru'][Math.floor(5 * rand())];
+        var path = ['', '/', '/index.html', '/?path=home', '/list.php#footer'][Math.floor(5 * rand())];
+        return protocol + subdomain + domain + tld + path;
+    },
     DATE_YYYY : function() {
         var yyyy = randomDate().getFullYear();
         return yyyy + '';
