@@ -1,0 +1,22 @@
+{
+  "name": "mockJSON",
+  "homepage": "https://github.com/mennovanslooten/mockJSON",
+  "authors": [
+    "Menno van Slooten <menno.vanslooten@gmail.com>"
+  ],
+  "description": "Plugin for jQuery that can hijack JSON and JSONP requests and respond with randomly generated JSON data based on templates written in JSON.",
+  "main": "js/jquery.mockjson.js",
+  "moduleType": [],
+  "keywords": [
+    "mock",
+    "json"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
