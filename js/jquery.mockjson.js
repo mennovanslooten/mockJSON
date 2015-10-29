@@ -34,7 +34,7 @@ $.ajax = function(options) {
     }
     
     return _original_ajax.apply(this, arguments);
-}
+};
 
 
 $.mockJSON.generateFromTemplate = function(template, name) {
@@ -95,12 +95,12 @@ $.mockJSON.generateFromTemplate = function(template, name) {
                         generated = Number(generated);
                 }
             } else {
-                generated = ""
+                generated = "";
                 for (var i = 0; i < length; i++) {
                     generated += String.fromCharCode(Math.floor(rand() * 255));
                 }
             }
-            break
+            break;
 
         default:
             generated = template;
@@ -108,7 +108,7 @@ $.mockJSON.generateFromTemplate = function(template, name) {
     }
     return generated;
 
-}
+};
 
 
 function getRandomData(key) {
